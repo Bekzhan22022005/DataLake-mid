@@ -29,8 +29,6 @@ public class FileController {
                 return ResponseEntity.badRequest()
                     .body(createErrorResponse("File is empty"));
             }
-            
-            // Валидация типа файла
             String originalName = file.getOriginalFilename();
             if (originalName == null || originalName.isEmpty()) {
                 return ResponseEntity.badRequest()
