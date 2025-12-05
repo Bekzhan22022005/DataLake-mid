@@ -57,38 +57,8 @@ public class MinIOService {
         return fileRepository.save(fileEntity);
     }
     
-    public InputStream downloadFile(String storedName) throws Exception {
-        FileEntity fileEntity = fileRepository.findByStoredName(storedName)
-                .orElseThrow(() -> new RuntimeException("File not found: " + storedName));
-        
-        return minioClient.getObject(
-            GetObjectArgs.builder()
-                .bucket(fileEntity.getBucketName())
-                .object(fileEntity.getObjectName())
-                .build()
-        );
-    }
-    
-    public FileEntity getFileInfo(String storedName) {
-        return fileRepository.findByStoredName(storedName)
-                .orElseThrow(() -> new RuntimeException("File not found: " + storedName));
-    }
-    
-    public void deleteFile(String storedName) throws Exception {
-        FileEntity fileEntity = fileRepository.findByStoredName(storedName)
-                .orElseThrow(() -> new RuntimeException("File not found: " + storedName));
-        
-        // Удаляем файл из MinIO
-        minioClient.removeObject(
-            RemoveObjectArgs.builder()
-                .bucket(fileEntity.getBucketName())
-                .object(fileEntity.getObjectName())
-                .build()
-        );
-        
-        // Удаляем запись из базы данных
-        fileRepository.delete(fileEntity);
-    }
+
+
     
     private void ensureBucketExists() throws Exception {
         boolean bucketExists = minioClient.bucketExists(
