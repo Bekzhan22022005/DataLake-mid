@@ -26,16 +26,13 @@ public class MinIOService {
     private final FileRepository fileRepository;
     
     public FileEntity uploadFile(MultipartFile file) throws Exception {
-        // Генерируем уникальное имя для файла
         String originalName = file.getOriginalFilename();
         String extension = getFileExtension(originalName);
         String storedName = UUID.randomUUID().toString() + extension;
         String objectName = storedName;
         
-        // Проверяем существование bucket'а и создаем если нужно
         ensureBucketExists();
         
-        // Загружаем файл в MinIO
         try (InputStream inputStream = file.getInputStream()) {
             minioClient.putObject(
                 PutObjectArgs.builder()
@@ -46,8 +43,7 @@ public class MinIOService {
                     .build()
             );
         }
-        
-        // Сохраняем информацию о файле в базу данных
+
         FileEntity fileEntity = FileEntity.builder()
                 .originalName(originalName)
                 .storedName(storedName)
@@ -119,3 +115,4 @@ public class MinIOService {
         return lastDotIndex == -1 ? "" : filename.substring(lastDotIndex);
     }
 }
+

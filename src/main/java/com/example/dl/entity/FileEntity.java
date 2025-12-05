@@ -51,3 +51,4 @@ public class FileEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
+
